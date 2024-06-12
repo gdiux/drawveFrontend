@@ -278,7 +278,7 @@ export class RifaComponent implements OnInit {
   public pagados: number = 0;
   public query: any = {
     desde: 0,
-    hasta: 100
+    hasta: 1000
   }
 
   loadTickets(){
@@ -1073,6 +1073,7 @@ export class RifaComponent implements OnInit {
   public apartadosIng: Ticket[] = [];
   public pagadosIng: Ticket[] = [];
   public pendientes: Ticket[] = [];
+  public totalTickets: number = 0;
   public totalApartado: number = 0;
   public totalPendiente: number = 0;
   public totalPendienteCobrar: number = 0;
@@ -1080,6 +1081,12 @@ export class RifaComponent implements OnInit {
   loadIngresos(){
 
     this.loadingEgresos = true;
+
+    this.totalTickets = 0;
+    this.totalApartado = 0;
+    this.totalPendiente = 0;
+    this.totalPendienteCobrar = 0;
+    this.totalPagado = 0;
 
     this.ticketsService.loadIngresosTickets(this.rifa.rifid!)
         .subscribe( ({apartados, pagados, totalApartado,totalPagado, pendientes}) => {
@@ -1102,12 +1109,11 @@ export class RifaComponent implements OnInit {
             
           }
 
-          let monto = 0;
           for (const tick of this.apartadosIng) {
-            monto += tick.monto;
+            this.totalTickets+= tick.monto;
           }
 
-          this.totalPendienteCobrar = (monto - this.totalApartado);         
+          this.totalPendienteCobrar = (this.totalTickets - this.totalApartado);         
           
 
           this.loadEgresos();
